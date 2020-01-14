@@ -1,0 +1,421 @@
+#:import hex kivy.utils.get_color_from_hex
+<Display>:
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas.before:
+            Color:
+                rgba: hex('#1c1c1c')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            size_hint_y: None
+            width: 250
+            MenuButton:
+                text: 'Scraping'
+                on_release: sm.current = 'Scraping'
+            MenuButton:
+                text: 'Upload'
+                on_release: sm.current = 'Upload'
+
+        ScreenManager:
+            id: sm
+            Upload:
+            Scraping:
+
+<MenuButton@Button>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    size_hint_y: None
+    size_hint_x: None
+    width: 250
+    height: 40
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: hex('#2b2c2d')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<MyButton@Button>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    border_radius: [4]
+    size_hint_y: None
+    height: 40
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: hex('#2b2c2d')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.border_radius
+
+<SmoothButton@Button>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    border_radius: [4]
+    size_hint_y: None
+    height: 40
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: hex('#2b2c2d')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.border_radius
+
+<Search@Button>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    border_radius: [4]
+    size_hint_y: None
+    size_hint_x: None
+    height: 40
+    font_size: 13
+    canvas.before:
+        Color:
+            rgba: hex('#F44336')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.border_radius
+
+<BoxInput@BoxLayout>
+    orientation:'vertical'
+    size_hint_y: None
+    height: 40
+    padding: 5
+    canvas.before:
+        Color:
+            rgba: hex('#1c1c1c')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [4]
+
+<InputLogin@TextInput>
+    background_normal: 'img/back_input.png'
+    background_active: 'img/back_input.png'
+    border_radius: [4]
+    size_hint_y: None
+    height: 30
+    font_size: 16
+    cursor_color: hex('#e4e4e4')
+    foreground_color: hex('#e4e4e4')
+    hint_text_color: hex('#909090')
+
+<InputResult@TextInput>
+    background_normal: 'img/back_input.png'
+    background_active: 'img/back_input.png'
+    border_radius: [4]
+    size_hint_y: None
+    height: 30
+    font_size: 14
+    cursor_color: hex('#e4e4e4')
+    foreground_color: hex('#e4e4e4')
+    hint_text_color: hex('#909090')
+    
+<Login>
+    name: 'Login'
+    BoxLayout:
+        orientation: 'vertical'
+        canvas:
+            Color:
+                rgba: hex('#1c1c1c')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        BoxLayout:
+            orientation: 'horizontal'
+            BoxLayout:
+                id: information
+                padding: (0,170)
+                orientation: 'vertical'
+
+                Image:
+                    size_hint_y: None
+                    height: 200
+                    source: 'img/logo.png'
+                Label:
+                    size_hint_y: None
+                    height: 100
+                    text: 'ANIEDASH'
+                    font_size: 40
+
+            BoxLayout:
+                id: formLogin
+                orientation: 'vertical'
+                padding: (40,200)
+                spacing: 10
+                canvas.before:
+                    Color:
+                        rgba: hex('#212020')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                BoxInput:
+                    id: inputLogin
+                    InputLogin:
+                        id: nickname
+                        hint_text: 'Usuario...'
+                BoxInput:
+                    id: inputPassword
+                    InputLogin:
+                        id: password
+                        password: True
+                        hint_text: 'Senha...'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_x: None
+                    padding: (0,0)
+                    margin: (0,0)
+                    CheckBox:
+                        size_hint_x: None
+                        width: 70
+                        id: manterLogado
+                    Label: 
+                        text:'Lembrar Usuario.'
+                        size_hint_x: None
+                        width: 80
+                        
+                Button:
+                    size_hint_y: None
+                    height: 50
+                    text: 'Logar'
+                    on_release: login()
+
+<Scraping>
+    name: 'Scraping'
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas.before:
+            Color:
+                rgba: hex('#212020')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        BoxLayout:
+            id: ControlerScraping
+            orientation: 'vertical'
+            BoxLayout:
+                orientation: 'vertical'
+                BoxLayout:
+                    id: boxControler
+                    padding: 10
+                    spacing: 5
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 70
+                    BoxInput:
+                        id: boxInputURL
+                        InputLogin:
+                            id: url
+                            hint_text: 'Insira a url do anime...'
+                    Search:
+                        width: 70
+                        text: 'Buscar'
+                        on_release: root.search()
+                    Search:
+                        width: 120
+                        text: 'Escolher Arquivos'
+                        on_release: root.fileSearchCommand()
+                    Search:
+                        width: 100
+                        text: 'Gerar CFG'
+                        on_release: root.showInfoCommand()
+
+                BoxLayout:
+                    BoxLayout:
+                        id: englobaTituloComScrollTemporadas
+                        orientation: 'vertical'
+                        padding: (10)
+                        Label:
+                            size_hint_y: None
+                            height: 30
+                            font_size: 12
+                            text: 'Temporadas:'
+                        ScrollView:
+                            id: Scrolltemporadas
+                            BoxLayout:
+                                id: temporadas
+                                orientation: 'vertical'
+                                spacing: 5
+                                size_hint_y: None
+                                height: self.minimum_height
+                                padding: (3,0)
+                    BoxLayout:
+                        id: englobaTituloComScrollSelectedFiles
+                        orientation: 'vertical'
+                        padding: (10)
+                        Label:
+                            size_hint_y: None
+                            height: 30
+                            font_size: 12
+                            text: 'Arquivos Selecionados:'        
+                        ScrollView:
+                            id: ScrollselectedFiles
+                            BoxLayout:
+                                id: selectedFiles
+                                orientation: 'vertical'
+                                spacing: 5
+                                size_hint_y: None
+                                height: self.minimum_height
+                                padding: (3,3,3,3)
+            BoxLayout:
+                id: englobaTituloComScrollResults
+                orientation: 'vertical'
+                Label:
+                    size_hint_y: None
+                    height: 30
+                    font_size: 12
+                    text: 'Previa do arquivo .CFG:'
+                ScrollView:
+                    id: ScrollResults
+                    canvas.before:
+                        Color:
+                            rgba: hex('#1c1c1c')
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                    BoxLayout:
+                        orientation: 'vertical'
+                        id: resultScraping
+                        spacing: 0
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: (10,10,10,10)
+                        canvas.before:
+                            Color:
+                                rgba: hex('#1c1c1c')
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+<Upload>
+    name: 'Upload'
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas:
+            Color:
+                rgba: hex('#1c1c1c')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                
+        BoxLayout:
+            id: Information
+            padding: (0,170)
+            orientation: 'vertical'
+
+            Image:
+                size_hint_y: None
+                height: 200
+                source: 'img/logo.png'
+            Label:
+                size_hint_y: None
+                height: 100
+                text: 'ANIEZILLA'
+                font_size: 40
+            
+        BoxLayout:
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba: hex('#212020')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            
+            ScrollView:
+                BoxLayout:
+                    id: Episodios
+                    spacing: 10
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: (10,10,10,10)
+
+            BoxLayout:
+                id: controlButtons
+                spacing: 8
+                size_hint_y: None
+                height: 60
+                padding: (10,10,10,10)
+                orientation: 'horizontal'
+
+                SmoothButton:
+                    id: uploadButton
+                    size_hint_y: None
+                    text: 'Iniciar Upload'
+
+                SmoothButton:
+                    id: StopButton
+                    text: 'Novo Episodio'
+
+                SmoothButton:
+                    id: AddButton
+                    text: 'Mult Episodios'
+                    back_color: hex('#2b2c2d')
+
+<Season>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    border_radius: [4]
+    size_hint_y: None
+    height: 40
+    font_size: 14
+    halign: 'right'
+    valign: 'middle'
+    canvas.before:
+        Color:
+            rgba: hex('#2b2c2d')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.border_radius
+    on_release: app.root.ids.sm.get_screen('Scraping').getSeason(int(self.id))
+
+<Episodio>
+    id: Episodio
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 100
+    canvas.before:
+        Color:
+            rgba: hex('#f44336')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [4]     
+    Image:
+        id: thumbEpisodio
+        size_hint_x: None
+        size_hint_y: None
+        width: 200
+        height: root.height
+        source: 'img/thumb-2.png'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: numeroEpisodio
+            font_size: 20
+        Label:
+            id: nomeAnime
+            font_size: 20
+        Label:
+            id: nomeEpisodio
+            font_size: 14
+
+    Button:
+        text: 'X'
+        size_hint_x: None
+        width: 60
+        on_release: app.root.get_screen('Upload').ids.Episodios.remove_widget(root)
+
