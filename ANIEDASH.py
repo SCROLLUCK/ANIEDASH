@@ -66,7 +66,7 @@ class Login(Screen):
 
 class Scraping(Screen):
     
-    def __init__(self, episodios, **kwargs):
+    def __init__(self, *episodios, **kwargs):
         super().__init__(**kwargs)
         
         self.url = ''
@@ -129,7 +129,7 @@ class Scraping(Screen):
 
                 if episodeInfoList:
                     for info in episodeInfoList:
-                        self.ids.resultScraping.add_widget(InputResult(meta=str(info)))
+                        self.ids.resultScraping.add_widget(InputResult(str(info)))
 
                 else:
                      messagebox.showwarning('ANIEDASH', 'Não há episódios para a temporada escolhida')
@@ -146,8 +146,9 @@ class Scraping(Screen):
 
         if self.ids.selectedFiles.children:
 
-            while self.ids.resultScraping.children:
-                self.ids.resultScraping.children.pop()
+            children = self.ids.resultScraping.children
+            while children:
+                self.ids.resultScraping.remove_widget(children[0])
 
             while self.ids.selectedFiles.children:
                 self.ids.selectedFiles.children.pop()
@@ -168,8 +169,9 @@ class Scraping(Screen):
         
         if self.animeInfo:
             self.showInfoCommand()
+
         return
-    
+
     def getAnimeInfo(self):
         self.animeInfo = GetUrlInfo(self.url)
 
@@ -197,14 +199,14 @@ class Scraping(Screen):
         
         if self.seasonList:
             for num, season in enumerate(self.seasonList, 0):
-                self.ids.temporadas.add_widget(Season(season,str(num)))
+                self.ids.temporadas.add_widget(Season(season, str(num)))
                 self.seasonDict[season] = num
     
     def getSeason(self, season):
 
-        if self.ids.resultScraping.children:
-            while self.ids.resultScraping.children:
-                self.ids.resultScraping.children.pop()
+        children = self.ids.resultScraping.children
+        while children:
+            self.ids.resultScraping.remove_widget(children[0])
 
         self.seasonChosen = season
         if self.ids.selectedFiles.children:
@@ -212,7 +214,7 @@ class Scraping(Screen):
 
 class Upload(Screen):
 
-    def __init__(self, episodios, **kwargs):
+    def __init__(self, *episodios, **kwargs):
         super().__init__(**kwargs)
         for episodio in episodios:
             self.ids.Episodios.add_widget(Episodio(numeroEpisodio=episodio, nomeAnime=episodio, nomeEpisodio=episodio))
