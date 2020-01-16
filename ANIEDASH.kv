@@ -53,7 +53,7 @@
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: self.border_radius
+            radius: [4]
 
 <SmoothButton@Button>
     background_color: (0,0,0,0)
@@ -68,7 +68,7 @@
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: self.border_radius
+            radius: [4]
 
 <Search@Button>
     background_color: (0,0,0,0)
@@ -84,7 +84,7 @@
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: self.border_radius
+            radius: [4]
 
 <BoxInput@BoxLayout>
     orientation:'vertical'
@@ -379,7 +379,7 @@
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: self.border_radius
+            radius: [4]
     on_release: app.root.ids.sm.get_screen('Scraping').getSeason(int(self.id))
 
 <Episodio>
