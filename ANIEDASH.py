@@ -15,33 +15,47 @@ from filecfgmanager import CFGfile
 import os, sys, re, json
 from kivy.config import Config
 
-Config.set('kivy','window_icon','C:\\Users\\lucas\\Desktop\\GUARDA_TRECO(L)\\ANIEDASH\\img\\logoIco.ico')
+DEBUG = False
+
+def resource_path(relative_path):
+    
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+if DEBUG:
+    Config.set('kivy','window_icon', resource_path(r'img/logoIco.ico'))
+else:
+    Config.set('kivy','window_icon', resource_path(r'logoIco.ico'))
+
 Config.set('graphics', 'resizable', '1') 
 Config.set('graphics', 'width', '1100')  
 Config.set('graphics', 'height', '600') 
 
 class Display(BoxLayout):
     pass
-
 class Episodio(BoxLayout):
-    def __init__(self,numeroEpisodio,nomeAnime,nomeEpisodio,**kwargs):
+    def __init__(self, numeroEpisodio, nomeAnime, nomeEpisodio, **kwargs):
         super().__init__(**kwargs)
         self.ids.numeroEpisodio.text = numeroEpisodio
         self.ids.nomeAnime.text = nomeAnime
         self.ids.nomeEpisodio.text = nomeEpisodio
 
 class MyButton(Button):
-    def __init__(self,meta,**kwargs):
+    def __init__(self, meta, **kwargs):
         super().__init__(**kwargs)
         self.text = meta
 
 class InputResult(TextInput):
-    def __init__(self,meta,**kwargs):
+    def __init__(self, meta, **kwargs):
         super().__init__(**kwargs)
         self.text = meta
 
 class Season(Button):
-    def __init__(self,seasonName,seasonNumber,**kwargs):
+    def __init__(self, seasonName, seasonNumber, **kwargs):
         super().__init__(**kwargs)
         self.text = seasonName
         self.id = seasonNumber
@@ -52,7 +66,7 @@ class Login(Screen):
 
 class Scraping(Screen):
     
-    def __init__(self,episodios=[],**kwargs):
+    def __init__(self, episodios, **kwargs):
         super().__init__(**kwargs)
         
         self.url = ''
@@ -63,8 +77,8 @@ class Scraping(Screen):
         self.seasonList = None
         self.seasonDict = {}
         self.seasonChosen = 0
-        root = Tk()
-        root.withdraw()
+        self.root = Tk()
+        self.root.withdraw()
 
     def generateCfgCommand(self):
         
@@ -80,7 +94,6 @@ class Scraping(Screen):
             editedJasonList.append(editJson)
 
             for key in keyList:
-
                 if editJson[key] != info2[key]:
                     flag = True
 
@@ -130,16 +143,16 @@ class Scraping(Screen):
             return
 
     def fileSearchCommand(self):
-        
-        if list(self.ids.selectedFiles.children): #Remove resultados e arquivosSelecionados antigos
-            for c in list(self.ids.resultScraping.children):
-                if isinstance(c, InputResult): self.ids.resultScraping.remove_widget(c)
-            for c in list(self.ids.selectedFiles.children):
-                if isinstance(c, MyButton): self.ids.selectedFiles.remove_widget(c)
-            self.fileNames = []
 
-        root = Tk()
-        root.withdraw()
+        if self.ids.selectedFiles.children:
+
+            while self.ids.resultScraping.children:
+                self.ids.resultScraping.children.pop()
+
+            while self.ids.selectedFiles.children:
+                self.ids.selectedFiles.children.pop()
+
+            self.fileNames = []
 
         fileNames = filedialog.askopenfilenames(title = 'Selecione os Episódios', filetypes = [('Arquivos .mp4', '*.mp4')])
         
@@ -162,9 +175,9 @@ class Scraping(Screen):
 
     def search(self):
 
-        if list(self.ids.temporadas.children): #Remove resultado antigo
-            for c in list(self.ids.temporadas.children):
-                if isinstance(c, Season): self.ids.temporadas.remove_widget(c) 
+        if self.ids.temporadas.children:
+            while self.ids.temporadas.children:
+                self.ids.temporadas.children.pop()
 
         self.url = self.ids.url.text
         if self.url == '':
@@ -187,17 +200,22 @@ class Scraping(Screen):
                 self.ids.temporadas.add_widget(Season(season,str(num)))
                 self.seasonDict[season] = num
     
-    def getSeason(self,season):
+    def getSeason(self, season):
 
-        if list(self.ids.resultScraping.children): #Remove resultado antigo, se existir..
-            for c in list(self.ids.resultScraping.children):
-                if isinstance(c, InputResult): self.ids.resultScraping.remove_widget(c)
+        if self.ids.resultScraping.children:
+            while self.ids.resultScraping.children:
+                self.ids.resultScraping.children.pop()
 
         self.seasonChosen = season
-        if list(self.ids.selectedFiles.children): #Se ja tiver arquivos selecionados
+        if self.ids.selectedFiles.children:
             self.showInfoCommand()
 
 class Upload(Screen):
+
+    def __init__(self, episodios, **kwargs):
+        super().__init__(**kwargs)
+        for episodio in episodios:
+            self.ids.Episodios.add_widget(Episodio(numeroEpisodio=episodio, nomeAnime=episodio, nomeEpisodio=episodio))
 
     def addMultEps(self):
         url = 'https://www.crunchyroll.com/pt-br/saga-of-tanya-the-evil'
@@ -205,13 +223,7 @@ class Upload(Screen):
         anime = GetUrlInfo(url)
         names = anime.getAnimeNames(season)
         for name in names:
-           self.ids.Episodios.add_widget(Episodio(numeroEpisodio=name,nomeAnime=name,nomeEpisodio=name))
-    
-
-    def __init__(self,episodios=[],**kwargs):
-        super().__init__(**kwargs)
-        for episodio in episodios:
-            self.ids.Episodios.add_widget(Episodio(numeroEpisodio=episodio,nomeAnime=episodio,nomeEpisodio=episodio))
+           self.ids.Episodios.add_widget(Episodio(numeroEpisodio=name, nomeAnime=name, nomeEpisodio=name))
 
 class ANIEDASH(App):
     def build(self):
