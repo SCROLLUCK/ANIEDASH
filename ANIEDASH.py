@@ -85,8 +85,14 @@ class Scraping(Screen):
         editedJasonList = []
         keyList = ['temporada', 'episodio', 'nome', 'duracao', 'thumb', 'qualidade']
 
-        inputList = re.split('\n', self.episodeInfoTextBox.get('1.0', 'end-2c'))
-        
+        inputList = []
+        children = self.ids.resultScraping.children
+        while children:
+            inputList.append(children[0].text)
+            self.ids.resultScraping.remove_widget(children[0])
+
+        inputList = inputList[::-1]
+
         flag = False
         for info1, info2 in zip(inputList, self.cfgFileObject.episodeInfoList):
             
@@ -105,7 +111,6 @@ class Scraping(Screen):
                 self.cfgFileObject.setCfgFile(self.directoryPath, self.cfgFileObject.episodeInfoList)
 
         messagebox.showwarning('ANIEDASH', 'CFG Criado com sucesso!')
-        self.resetAll()
     
     def showInfoCommand(self):     
         

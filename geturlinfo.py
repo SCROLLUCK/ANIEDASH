@@ -21,8 +21,9 @@ class GetUrlInfo(object):
 
         for div in divs:
             spans = div.find_all('span', class_ = 'block')
-            if any([re.search('\\bEpisódio (SP|\\d+.\\d+)\\b', str(i)) for i in spans]):
+            if any([re.search('\\bEpisódio (SP|\\d+\\.\\d)\\b', str(i)) for i in spans]):
                 div.a.decompose()
+                
 
         names = []
         _names = seasons.find_all('img')[::-1]
